@@ -19,15 +19,7 @@ libfat.a: fat.o
 
 fat_test.o: fat_test.cc fat.h
 
-SUBMIT_FILENAME=fat-submission-$(shell date +%Y%m%d%H%M%S).tar.gz
-
-archive:
-	tar -zcf $(SUBMIT_FILENAME) $(wildcard *.cc *.h *.hh *.H *.cpp *.C *.c *.txt *.md *.pdf) Makefile 
-	@echo "Created $(SUBMIT_FILENAME); please upload and submit this file."
-
-submit: archive
-
 clean:
 	rm -f *.o
 
-.PHONY: submit archive all clean
+.PHONY: clean
