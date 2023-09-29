@@ -15,6 +15,8 @@
 #include <sstream>
 #include <map>
 
+#define DO_FORK_FOR_TESTS
+
 namespace {
 bool TEST_DEBUG = false;
 int passed_groups = 0, failed_groups = 0;
@@ -27,22 +29,6 @@ std::ofstream myout;
 
 
 const int big_timeout = 200;
-
-/* This testing script has an option to try fork()ing for each test,
-   enabled by this #define. This allows timeouts for individual tests
-   (in case of infinite loops) and recovery from crashes on
-   individual tests which is handy when using this as a template for
-   grading, but mostly confusing when using this for self-testing,
-   so it is disabled by default
-
-   The logic for this forking includes logic to save the offsets of
-   every file descriptor >= 4 (fds 0 to 3 are stdin, stdout, stderr
-   and 'myout') and restore it after waiting on the forked
-   subprocess in order to handle cases where code uses the offset
-   in a file descriptor to save something like the current working
-   directory. (I do not recommmend this approach as it is extremely
-   error-prone.)
- */
 #ifdef DO_FORK_FOR_TESTS
 int nest_level = 0;
 
@@ -888,14 +874,6 @@ int main(int argc, char **argv) {
     mounted_tests();
 #ifndef GRADING_OUTPUT
     myout << "Passed " << passed_groups << " test groups and failed " << failed_groups << " test groups\n";
-    myout << "(by passing " << passed_total << " subtests and failing " << failed_total << " subtests)\n\n";
-    myout << "Note that the number of tests/subtests is not a very good indication of how\n"
-             "much you've completed; for example there several tests reading\n"
-             "from many offsets in a file; all of these will likely only be one\n"
-             "item on our grading rubric, while failing a small number of tests\n"
-             "related to reading the root directory indicates a more serious\n"
-             "problem.\n\n"
-             "Also, please be aware we may run additional tests, including tests with\n"
-             "a different disk image for grading.\n" << std::endl;
+    myout << "(by passing " << passed_total << " subtests and failing " << failed_total << " subtests)\n\n" << std::endl;
 #endif
 }
